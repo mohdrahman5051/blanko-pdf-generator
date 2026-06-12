@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bulk Certificate Generator</title>
+
+<style>
+body{
+    font-family:Arial,sans-serif;
+    background:#EBD7CE;
+    padding:40px;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
+    background:white;
+    padding:30px;
+    border-radius:20px;
+}
+
+h1{
+    text-align:center;
+}
+
+input[type=file]{
+    width:100%;
+    margin:20px 0;
+}
+
+button{
+    width:100%;
+    padding:15px;
+    border:none;
+    background:#836871;
+    color:white;
+    border-radius:10px;
+    cursor:pointer;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>Bulk Certificate Generator</h1>
+
+<form action="/generate-bulk-certificates"
+      method="post"
+      enctype="multipart/form-data">
+
+
+<input type="file"
+       name="csvFile"
+       accept=".csv"
+       required>
+
+<button type="submit">
+    Generate Certificates
+</button>
+
+
+</form>
+
+</div>
+
+</body>
+</html>

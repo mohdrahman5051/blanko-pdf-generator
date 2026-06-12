@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Blanko</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* same styles (unchanged for readability) */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#EBD7CE;
+    color:#3A3335;
+    font-family:'Poppins',sans-serif;
+}
+
+.header{
+    text-align:center;
+    padding:50px 20px;
+}
+
+.header h1{
+    font-family:'Cormorant Garamond',serif;
+    font-size:72px;
+    letter-spacing:4px;
+    color:#836871;
+}
+
+.header p{
+    font-size:18px;
+    color:#917F88;
+    margin-top:10px;
+}
+
+.hero{
+    text-align:center;
+    padding:20px 20px 50px;
+}
+
+.hero h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:42px;
+    color:#836871;
+    margin-bottom:15px;
+}
+
+.hero p{
+    max-width:700px;
+    margin:auto;
+    line-height:1.8;
+    color:#5A5054;
+}
+
+.cards{
+    width:90%;
+    max-width:1200px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:25px;
+}
+
+.card{
+    background:white;
+    padding:30px;
+    border-radius:22px;
+    box-shadow:0 10px 25px rgba(131,104,113,0.12);
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+}
+
+.card h3{
+    font-family:'Cormorant Garamond',serif;
+    font-size:30px;
+    color:#836871;
+    margin-bottom:15px;
+}
+
+.card p{
+    color:#666;
+    margin-bottom:25px;
+    min-height:50px;
+}
+
+.card button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:#836871;
+    color:white;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:500;
+}
+
+.card button:hover{
+    background:#A37E84;
+}
+
+.features{
+    width:90%;
+    max-width:1200px;
+    margin:80px auto;
+}
+
+.features h2{
+    text-align:center;
+    font-family:'Cormorant Garamond',serif;
+    font-size:42px;
+    color:#836871;
+    margin-bottom:35px;
+}
+
+.feature-list{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+.feature{
+    background:white;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 8px 20px rgba(131,104,113,0.08);
+}
+
+.feature h3{
+    color:#836871;
+    margin-bottom:10px;
+}
+
+.footer{
+    text-align:center;
+    padding:30px;
+    color:#917F88;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>BLANKO</h1>
+    <p>Create beautiful documents effortlessly.</p>
+</div>
+
+<div class="hero">
+    <h2>Create Beautiful Documents in Minutes</h2>
+    <p>
+        Blanko helps students, professionals and businesses create polished documents with a single click.
+    </p>
+</div>
+
+<!-- CARDS -->
+<div class="cards">
+
+    <div class="card">
+        <h3>Resume Builder</h3>
+        <p>Create professional resumes in seconds.</p>
+        <button onclick="window.location.href='/resume'">
+            Open Module
+        </button>
+    </div>
+
+    <div class="card">
+        <h3>Certificate Generator</h3>
+        <p>Create elegant certificates instantly.</p>
+        <button onclick="window.location.href='/certificate'">
+            Open Module
+        </button>
+    </div>
+
+<div class="card">
+    <h3>Bulk Certificates</h3>
+    <p>Generate certificates from CSV files.</p>
+
+    <button onclick="window.location.href='/bulk-certificate'">
+        Open Module
+    </button>
+</div>
+
+
+    <div class="card">
+        <h3>Invoice Generator</h3>
+        <p>Generate business-ready invoices with automatic totals.</p>
+        <button onclick="window.location.href='/invoice'">
+            Open Module
+        </button>
+    </div>
+
+
+    <div class="card">
+    <h3>My Documents</h3>
+    <p>View all documents you generated.</p>
+    <button onclick="window.location.href='/my-documents'">
+        Open Module
+    </button>
+</div>
+
+    <div class="card">
+        <h3>Study Notes</h3>
+        <p>Organize and generate academic notes.</p>
+        <button disabled>Coming Soon</button>
+    </div>
+
+    <div class="card">
+        <h3>Thesis Formatter</h3>
+        <p>Format dissertations and research reports.</p>
+        <button disabled>Coming Soon</button>
+    </div>
+
+    <div class="card">
+        <h3>Cover Letter Builder</h3>
+        <p>Create professional cover letters.</p>
+        <button disabled>Coming Soon</button>
+    </div>
+
+</div>
+
+<!-- STATS (READY FOR BACKEND INTEGRATION) -->
+<div class="features">
+
+    <h2>Blanko Today</h2>
+
+    <div class="feature-list">
+
+        <div class="feature">
+            <h3 id="resumeCount">1</h3>
+            <p>Resumes Generated</p>
+        </div>
+
+        <div class="feature">
+            <h3 id="invoiceCount">0</h3>
+            <p>Invoices Generated</p>
+        </div>
+
+        <div class="feature">
+            <h3 id="certificateCount">0</h3>
+            <p>Certificates Generated</p>
+        </div>
+
+       
+
+    </div>
+
+</div>
+
+<div class="features">
+
+    <h2>Why Blanko?</h2>
+
+    <div class="feature-list">
+
+        <div class="feature">
+            <h3>Elegant Templates</h3>
+            <p>Designed for professional presentation.</p>
+        </div>
+
+        <div class="feature">
+            <h3>Instant PDF Export</h3>
+            <p>Create and download documents immediately.</p>
+        </div>
+
+        <div class="feature">
+            <h3>Simple Workflow</h3>
+            <p>Minimal steps. Maximum productivity.</p>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="footer">
+    Blanko © 2026
+</div>
+
+
+<script>
+async function loadCounts() {
+    try {
+        const resumeRes = await fetch("/api/count/resume");
+        const invoiceRes = await fetch("/api/count/invoice");
+        const certificateRes = await fetch("/api/count/certificate");
+
+        const resumeCount = await resumeRes.json();
+        const invoiceCount = await invoiceRes.json();
+        const certificateCount = await certificateRes.json();
+
+        document.getElementById("resumeCount").innerText = resumeCount;
+        document.getElementById("invoiceCount").innerText = invoiceCount;
+        document.getElementById("certificateCount").innerText = certificateCount;
+
+    } catch (err) {
+        console.error("Error loading dashboard stats:", err);
+    }
+}
+
+loadCounts();
+</script>
+
+</body>
+</html>

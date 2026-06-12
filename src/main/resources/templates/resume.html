@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Resume Builder - Blanko</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#EBD7CE;
+    font-family:'Poppins',sans-serif;
+    color:#3A3335;
+}
+
+.navbar{
+    background:#F7F0EC;
+    padding:18px 30px;
+    display:flex;
+    justify-content:center;
+    gap:35px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.08);
+}
+
+.navbar a{
+    text-decoration:none;
+    color:#836871;
+    font-weight:600;
+}
+
+.header{
+    text-align:center;
+    padding:50px 20px 20px;
+}
+
+.header h1{
+    font-family:'Cormorant Garamond',serif;
+    font-size:72px;
+    letter-spacing:4px;
+    color:#836871;
+}
+
+.header p{
+    color:#917F88;
+    margin-top:10px;
+    font-size:18px;
+}
+
+.container{
+    max-width:900px;
+    margin:30px auto 60px;
+    padding:0 20px;
+}
+
+.card{
+    background:white;
+    padding:45px;
+    border-radius:24px;
+    box-shadow:0 10px 25px rgba(131,104,113,0.12);
+}
+
+.card h2{
+    font-family:'Cormorant Garamond',serif;
+    color:#836871;
+    font-size:42px;
+    margin-bottom:35px;
+    text-align:center;
+}
+
+label{
+    display:block;
+    margin-bottom:8px;
+    font-weight:500;
+    color:#5A5054;
+}
+
+input,
+textarea{
+    width:100%;
+    padding:14px;
+    border:1px solid #D8DEE3;
+    border-radius:12px;
+    margin-bottom:20px;
+    font-size:15px;
+    font-family:'Poppins',sans-serif;
+}
+
+textarea{
+    min-height:120px;
+    resize:vertical;
+}
+
+input:focus,
+textarea:focus{
+    outline:none;
+    border-color:#836871;
+}
+
+button{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:14px;
+    background:#836871;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.3s;
+    font-weight:500;
+}
+
+button:hover{
+    background:#A37E84;
+}
+
+.back{
+    text-align:center;
+    margin-top:25px;
+}
+
+.back a{
+    text-decoration:none;
+    color:#836871;
+    font-weight:500;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+    <a href="/">Dashboard</a>
+    <a href="/resume">Resume</a>
+    <a href="/certificate">Certificate</a>
+    <a href="/invoice">Invoice</a>
+</div>
+
+<div class="header">
+    <h1>BLANKO</h1>
+    <p>Professional Resume Builder</p>
+</div>
+
+<div class="container">
+
+
+<div class="card">
+
+    <h2>Create Your Resume</h2>
+
+    <form action="/generate-resume" method="post">
+
+        <label>Full Name</label>
+        <input type="text" name="name">
+
+        <label>Email Address</label>
+        <input type="email" name="email">
+
+        <label>Phone Number</label>
+        <input type="text" name="phone">
+
+        <label>Education</label>
+        <input type="text" name="education">
+
+        <label>Skills</label>
+        <input type="text" name="skills">
+
+        <label>Professional Summary</label>
+        <textarea name="summary"></textarea>
+
+        <label>Projects</label>
+        <textarea name="projects"></textarea>
+
+        <label>Experience</label>
+        <textarea name="experience"></textarea>
+
+        <label>Certifications</label>
+        <input type="text" name="certifications">
+
+        <label>LinkedIn Profile</label>
+        <input type="text" name="linkedin">
+
+        <label>GitHub Profile</label>
+        <input type="text" name="github">
+
+        <button type="submit">
+            Generate Resume PDF
+        </button>
+
+    </form>
+
+    <div class="back">
+        <a href="/">← Back to Dashboard</a>
+    </div>
+
+</div>
+
+</div>
+
+</body>
+</html>

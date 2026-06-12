@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>My Documents</title>
+
+<style>
+
+body{
+    font-family:Arial;
+    padding:40px;
+    background:#EBD7CE;
+}
+
+h1{
+    color:#836871;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+th,td{
+    padding:12px;
+    border:1px solid #ddd;
+    text-align:left;
+}
+
+th{
+    background:#836871;
+    color:white;
+}
+
+a{
+    text-decoration:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>My Documents</h1>
+
+<table>
+
+<tr>
+    <th>ID</th>
+    <th>Type</th>
+    <th>File Name</th>
+    <th>Created</th>
+</tr>
+
+<tr th:each="doc : ${documents}">
+    <td th:text="${doc.id}"></td>
+    <td th:text="${doc.documentType}"></td>
+    <td th:text="${doc.fileName}"></td>
+    <td th:text="${doc.createdAt}"></td>
+</tr>
+
+</table>
+
+<br>
+
+<a href="/">← Dashboard</a>
+
+</body>
+</html>
