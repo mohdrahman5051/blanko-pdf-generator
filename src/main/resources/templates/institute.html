@@ -4,54 +4,89 @@
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Institute Profile</title>
+<title>Institute Profile - Blanko</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
 
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Poppins,sans-serif;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
 }
 
 body{
+    background:#EBD7CE;
+    padding:40px;
+}
 
-background:#EBD7CE;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-
+.container{
+    max-width:750px;
+    margin:auto;
 }
 
 .card{
-
-background:white;
-padding:50px;
-border-radius:20px;
-box-shadow:0 10px 25px rgba(0,0,0,.08);
-width:650px;
-
+    background:white;
+    padding:40px;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
 }
 
 h1{
-
-text-align:center;
-margin-bottom:30px;
-color:#836871;
-
+    text-align:center;
+    color:#836871;
+    margin-bottom:30px;
 }
 
-p{
+label{
+    display:block;
+    margin-top:18px;
+    margin-bottom:8px;
+    font-weight:500;
+    color:#555;
+}
 
-text-align:center;
-color:#666;
-font-size:18px;
+input{
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:15px;
+}
 
+input[type="file"]{
+    padding:10px;
+}
+
+button{
+    width:100%;
+    margin-top:30px;
+    padding:15px;
+    background:#836871;
+    color:white;
+    border:none;
+    border-radius:12px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#6e5760;
+}
+
+.back{
+    text-align:center;
+    margin-top:25px;
+}
+
+.back a{
+    text-decoration:none;
+    color:#836871;
+    font-weight:500;
 }
 
 </style>
@@ -60,16 +95,69 @@ font-size:18px;
 
 <body>
 
+<div class="container">
+
 <div class="card">
 
 <h1>Institute Profile</h1>
 
-<p>
+<form action="/save-institute"
+      method="post"
+      enctype="multipart/form-data">
 
-This page will soon allow institutes to upload their logo,
-signature and branding information.
+<label>Institute Name</label>
+<input
+type="text"
+name="instituteName"
+required>
 
-</p>
+<label>Director Name</label>
+<input
+type="text"
+name="directorName"
+required>
+
+<label>Institute Email</label>
+<input
+type="email"
+name="email"
+required>
+
+<label>Phone Number</label>
+<input
+type="text"
+name="phone">
+
+<label>Website</label>
+<input
+type="text"
+name="website">
+
+<label>Institute Logo</label>
+<input
+type="file"
+name="logo"
+accept="image/*">
+
+<label>Director Signature</label>
+<input
+type="file"
+name="signature"
+accept="image/*">
+
+<button type="submit">
+
+Save Institute Profile
+
+</button>
+
+</form>
+
+<div class="back">
+<a href="/">← Back to Dashboard</a>
+</div>
+
+</div>
 
 </div>
 
