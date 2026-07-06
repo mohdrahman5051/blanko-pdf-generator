@@ -7,13 +7,15 @@ import com.lowagie.text.Document;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.awt.Color;
+import java.io.File;
 
 public class CertificatePdfGenerator {
 
 
 public static byte[] generateCertificate(
         String studentName,
-        String courseName) {
+        String courseName,
+        Institute institute) {
 
     try {
 
@@ -23,6 +25,30 @@ public static byte[] generateCertificate(
         PdfWriter.getInstance(document, outputStream);
 
         document.open();
+
+        if(institute.getLogoPath() != null) {
+
+    String logoFullPath =
+            "C:/Users/mohdr/JavaProjects/Blanko/uploads/"
+            + institute.getLogoPath();
+
+    File logoFile =
+            new File(logoFullPath);
+
+    if(logoFile.exists()) {
+
+        Image logo =
+                Image.getInstance(
+                        logoFullPath);
+
+        logo.scaleToFit(90,90);
+
+        logo.setAlignment(
+                Element.ALIGN_CENTER);
+
+        document.add(logo);
+    }
+}
 
         // ---------------- TITLE ----------------
         Font titleFont = new Font(
@@ -45,9 +71,13 @@ public static byte[] generateCertificate(
         Font.BOLD,
         new Color(184,134,11));
 
-Paragraph blanko =
-        new Paragraph("BLANKO", brandFont);
-        blanko.setAlignment(Element.ALIGN_CENTER);
+Paragraph instituteName =
+        new Paragraph(
+                institute.getInstituteName().toUpperCase(),
+                brandFont);
+
+instituteName.setAlignment(
+        Element.ALIGN_CENTER);
 
         Paragraph line1 = new Paragraph("__________________________________________", normalFont);
         line1.setAlignment(Element.ALIGN_CENTER);
@@ -95,7 +125,7 @@ certificateId.setAlignment(
         footer.setAlignment(Element.ALIGN_CENTER);
 
         // ---------------- SPACING ----------------
-        document.add(blanko);
+        document.add(instituteName);
         document.add(new Paragraph(" "));
         document.add(line1);
         document.add(new Paragraph(" "));

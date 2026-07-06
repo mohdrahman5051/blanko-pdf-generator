@@ -1,103 +1,107 @@
 package com.pdfapp;
 
 import com.opencsv.CSVReader;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.InputStreamReader;
-
 import java.io.ByteArrayOutputStream;
+import java.io.InputStreamReader;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 
 @Controller
 public class BulkCertificateController {
 
+    @Autowired
+    private UserRepository userRepository;
 
-@GetMapping("/bulk-certificate")
-public String bulkCertificatePage() {
-    return "bulk-certificate";
-}
+    @Autowired
+    private InstituteRepository instituteRepository;
 
-@PostMapping("/generate-bulk-certificates")
-public ResponseEntity<byte[]> generateBulkCertificates(
-MultipartFile csvFile) {
-
-
-try {
-
-    CSVReader reader =
-            new CSVReader(
-                    new InputStreamReader(
-                            csvFile.getInputStream()));
-
-    ByteArrayOutputStream zipByteStream =
-            new ByteArrayOutputStream();
-
-    ZipOutputStream zipOut =
-            new ZipOutputStream(
-                    zipByteStream);
-
-    String[] row;
-
-    while((row = reader.readNext()) != null) {
-
-        String studentName = row[0];
-        String courseName = row[1];
-
-        byte[] pdfBytes =
-                CertificatePdfGenerator
-                        .generateCertificate(
-                                studentName,
-                                courseName);
-
-        String fileName =
-                studentName.replace(" ", "_")
-                + ".pdf";
-
-        ZipEntry zipEntry =
-                new ZipEntry(fileName);
-
-        zipOut.putNextEntry(zipEntry);
-
-        zipOut.write(pdfBytes);
-
-        zipOut.closeEntry();
-
-        System.out.println(
-                "ADDED TO ZIP: "
-                        + fileName);
+    @GetMapping("/bulk-certificate")
+    public String bulkCertificatePage() {
+        return "bulk-certificate";
     }
 
-    zipOut.close();
-    reader.close();
+    @PostMapping("/generate-bulk-certificates")
+    public ResponseEntity<byte[]> generateBulkCertificates(
+            MultipartFile csvFile,
+            HttpSession session) {
 
-    return ResponseEntity.ok()
-            .header(
-                    HttpHeaders.CONTENT_DISPOSITION,
-                    "attachment; filename=certificates.zip")
-            .contentType(
-                    MediaType.APPLICATION_OCTET_STREAM)
-            .body(
-                    zipByteStream.toByteArray());
+        try {
 
-} catch(Exception e) {
+            String sessionEmail =
+                    (String) session.getAttribute("userEmail");
 
-    e.printStackTrace();
+            if (sessionEmail == null) {
+                return ResponseEntity.status(401).build();
+            }
 
-    return ResponseEntity.internalServerError()
-            .build();
-}
+            User user =
+                    userRepository.findByEmail(sessionEmail);
 
+            Institute institute =
+                    instituteRepository.findByUserId(user.getId());
 
-}
+            CSVReader reader =
+                    new CSVReader(
+                            new InputStreamReader(
+                                    csvFile.getInputStream()));
 
+            ByteArrayOutputStream zipByteStream =
+                    new ByteArrayOutputStream();
 
+            ZipOutputStream zipOut =
+                    new ZipOutputStream(zipByteStream);
 
+            String[] row;
+
+            while ((row = reader.readNext()) != null) {
+
+                String studentName = row[0];
+                String courseName = row[1];
+
+                byte[] pdfBytes =
+                        CertificatePdfGenerator.generateCertificate(
+                                studentName,
+                                courseName,
+                                institute);
+
+                String fileName =
+                        studentName.replace(" ", "_") + ".pdf";
+
+                ZipEntry zipEntry =
+                        new ZipEntry(fileName);
+
+                zipOut.putNextEntry(zipEntry);
+
+                zipOut.write(pdfBytes);
+
+                zipOut.closeEntry();
+            }
+
+            zipOut.close();
+            reader.close();
+
+            return ResponseEntity.ok()
+                    .header(
+                            HttpHeaders.CONTENT_DISPOSITION,
+                            "attachment; filename=certificates.zip")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(zipByteStream.toByteArray());
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

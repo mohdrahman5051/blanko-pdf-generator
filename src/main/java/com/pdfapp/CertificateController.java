@@ -23,6 +23,9 @@ private DocumentRepository documentRepository;
 @Autowired
 private UserRepository userRepository;
 
+@Autowired
+private InstituteRepository instituteRepository;
+
 @GetMapping("/certificate")
 public String certificatePage(HttpSession session) {
 
@@ -60,10 +63,14 @@ System.out.println("CERTIFICATE SESSION ID = " + session.getId());
         return ResponseEntity.status(404).build();
     }
 
-    byte[] pdfBytes =
-            CertificatePdfGenerator.generateCertificate(
-                    studentName,
-                    courseName);
+    Institute institute =
+        instituteRepository.findByUserId(user.getId());
+
+byte[] pdfBytes =
+        CertificatePdfGenerator.generateCertificate(
+                studentName,
+                courseName,
+                institute);
 
     Document document = new Document();
 
