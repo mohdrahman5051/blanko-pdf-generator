@@ -1,8 +1,11 @@
 package com.pdfapp;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -14,6 +17,9 @@ public class InstituteController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @GetMapping("/institute")
     public String institutePage() {
@@ -29,7 +35,12 @@ public class InstituteController {
             @RequestParam String phone,
             @RequestParam String website,
 
-            HttpSession session) {
+            @RequestParam MultipartFile logo,
+            @RequestParam MultipartFile signature,
+
+            HttpSession session)
+
+            throws IOException {
 
         String sessionEmail =
                 (String) session.getAttribute("userEmail");
@@ -54,6 +65,15 @@ public class InstituteController {
         institute.setEmail(email);
         institute.setPhone(phone);
         institute.setWebsite(website);
+
+        String logoPath =
+                fileStorageService.saveLogo(logo);
+
+        String signaturePath =
+                fileStorageService.saveSignature(signature);
+
+        institute.setLogoPath(logoPath);
+        institute.setSignaturePath(signaturePath);
 
         instituteRepository.save(institute);
 
