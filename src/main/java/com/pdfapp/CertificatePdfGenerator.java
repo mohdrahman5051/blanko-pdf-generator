@@ -112,18 +112,45 @@ instituteName.setAlignment(
 
 certificateId.setAlignment(
         Element.ALIGN_CENTER);
+        
+        Image signature = null;
 
-        Paragraph signature = new Paragraph(
-        "━━━━━━━━━━━━━━━━━━━━━━━━",
-        normalFont);
-        signature.setAlignment(Element.ALIGN_CENTER);
+        if (institute.getSignaturePath() != null) {
 
-        Paragraph signText = new Paragraph("Authorized Signature", smallFont);
-        signText.setAlignment(Element.ALIGN_CENTER);
+    String signatureFullPath =
+            "C:/Users/mohdr/JavaProjects/Blanko/uploads/"
+                    + institute.getSignaturePath();
 
-        Paragraph footer = new Paragraph("Blanko - Document Generator System", smallFont);
-        footer.setAlignment(Element.ALIGN_CENTER);
+    File signatureFile =
+            new File(signatureFullPath);
 
+    if (signatureFile.exists()) {
+
+       
+if (signatureFile.exists()) {
+
+    signature = Image.getInstance(signatureFullPath);
+
+    signature.scaleToFit(140, 60);
+
+    signature.setAlignment(Element.ALIGN_CENTER);
+}
+    }
+}
+
+Paragraph directorName =
+        new Paragraph(
+                institute.getDirectorName(),
+                smallFont);
+
+directorName.setAlignment(Element.ALIGN_CENTER);
+
+Paragraph directorTitle =
+        new Paragraph(
+                "Director",
+                smallFont);
+
+directorTitle.setAlignment(Element.ALIGN_CENTER);
         // ---------------- SPACING ----------------
         document.add(instituteName);
         document.add(new Paragraph(" "));
@@ -143,10 +170,14 @@ certificateId.setAlignment(
         document.add(new Paragraph(" "));
         document.add(certificateId);
         document.add(new Paragraph(" "));
-        document.add(signature);
-        document.add(signText);
+
+        if(signature != null) {
+                document.add(signature);
+        }
+        document.add(directorName);
+        document.add(directorTitle);
         document.add(new Paragraph(" "));
-        document.add(footer);
+        
 
         document.close();
 
