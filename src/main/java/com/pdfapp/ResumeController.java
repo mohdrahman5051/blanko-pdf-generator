@@ -1,6 +1,5 @@
 package com.pdfapp;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,25 +15,30 @@ import java.sql.Timestamp;
 @Controller
 public class ResumeController {
 
-    @Autowired
-    private DocumentRepository documentRepository;
+    private final DocumentRepository documentRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    public ResumeController(
+            DocumentRepository documentRepository,
+            UserRepository userRepository) {
+
+        this.documentRepository = documentRepository;
+        this.userRepository = userRepository;
+    }
 
     // Show resume form page
     @GetMapping("/resume")
-public String resumePage(HttpSession session) {
+    public String resumePage(HttpSession session) {
 
-    String sessionEmail =
-            (String) session.getAttribute("userEmail");
+        String sessionEmail =
+                (String) session.getAttribute("userEmail");
 
-    if(sessionEmail == null) {
-        return "redirect:/login";
+        if (sessionEmail == null) {
+            return "redirect:/login";
+        }
+
+        return "resume";
     }
-
-    return "resume";
-}
 
     // Generate resume PDF
     @PostMapping("/generate-resume")
@@ -50,48 +54,54 @@ public String resumePage(HttpSession session) {
             @RequestParam String certifications,
             @RequestParam String linkedin,
             @RequestParam String github,
-            HttpSession session
-    ) {
-            System.out.println("GENERATE RESUME METHOD CALLED");
+            HttpSession session) {
+
+        System.out.println("GENERATE RESUME METHOD CALLED");
+
         // 1. Get logged-in user email from session
-        String sessionEmail = (String) session.getAttribute("userEmail");
+        String sessionEmail =
+                (String) session.getAttribute("userEmail");
 
         System.out.println("SESSION EMAIL = " + sessionEmail);
-System.out.println("SESSION ID = " + session.getId());
+        System.out.println("SESSION ID = " + session.getId());
 
         if (sessionEmail == null) {
             return ResponseEntity.status(401).build();
         }
 
         // 2. Fetch user from DB
-        User user = userRepository.findByEmail(sessionEmail);
+        User user =
+                userRepository.findByEmail(sessionEmail);
 
         if (user == null) {
             return ResponseEntity.status(404).build();
         }
 
         // 3. Generate PDF
-        byte[] pdfBytes = ResumePdfGenerator.generateResume(
-                name,
-                email,
-                phone,
-                education,
-                skills,
-                summary,
-                projects,
-                experience,
-                certifications,
-                linkedin,
-                github
-        );
+        byte[] pdfBytes =
+                ResumePdfGenerator.generateResume(
+                        name,
+                        email,
+                        phone,
+                        education,
+                        skills,
+                        summary,
+                        projects,
+                        experience,
+                        certifications,
+                        linkedin,
+                        github
+                );
 
         // 4. Save document record
         Document document = new Document();
+
         document.setUserId(user.getId());
         document.setDocumentType("Resume");
         document.setFileName("resume.pdf");
-        document.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-
+        document.setCreatedAt(
+                new Timestamp(
+                        System.currentTimeMillis()));
 
         System.out.println("DOCUMENT SAVE EXECUTED");
 
@@ -101,7 +111,9 @@ System.out.println("SESSION ID = " + session.getId());
 
         // 5. Return PDF response
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=resume.pdf")
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=resume.pdf")
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(pdfBytes);
     }

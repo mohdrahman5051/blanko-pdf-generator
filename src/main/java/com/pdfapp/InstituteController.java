@@ -2,7 +2,6 @@ package com.pdfapp;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,17 +11,30 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class InstituteController {
 
-    @Autowired
-    private InstituteRepository instituteRepository;
+    private final InstituteRepository instituteRepository;
+    private final UserRepository userRepository;
+    private final FileStorageService fileStorageService;
 
-    @Autowired
-    private UserRepository userRepository;
+    public InstituteController(
+            InstituteRepository instituteRepository,
+            UserRepository userRepository,
+            FileStorageService fileStorageService) {
 
-    @Autowired
-    private FileStorageService fileStorageService;
+        this.instituteRepository = instituteRepository;
+        this.userRepository = userRepository;
+        this.fileStorageService = fileStorageService;
+    }
 
     @GetMapping("/institute")
-    public String institutePage() {
+    public String institutePage(HttpSession session) {
+
+        String sessionEmail =
+                (String) session.getAttribute("userEmail");
+
+        if (sessionEmail == null) {
+            return "redirect:/login";
+        }
+
         return "institute";
     }
 
@@ -45,7 +57,7 @@ public class InstituteController {
         String sessionEmail =
                 (String) session.getAttribute("userEmail");
 
-        if(sessionEmail == null) {
+        if (sessionEmail == null) {
             return "redirect:/login";
         }
 
@@ -55,7 +67,7 @@ public class InstituteController {
         Institute institute =
                 instituteRepository.findByUserId(user.getId());
 
-        if(institute == null) {
+        if (institute == null) {
             institute = new Institute();
             institute.setUserId(user.getId());
         }
@@ -78,7 +90,5 @@ public class InstituteController {
         instituteRepository.save(institute);
 
         return "redirect:/institute";
-
     }
-
 }

@@ -1,17 +1,21 @@
 package com.pdfapp;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class RegisterController {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public RegisterController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @GetMapping("/register")
     public String registerPage() {
@@ -19,11 +23,24 @@ public class RegisterController {
     }
 
     @PostMapping("/register")
-    @ResponseBody
     public String registerUser(
             @RequestParam String name,
             @RequestParam String email,
-            @RequestParam String password) {
+            @RequestParam String password,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+
+        User existingUser =
+                userRepository.findByEmail(email);
+
+        if (existingUser != null) {
+
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "An account with this email already exists.");
+
+            return "redirect:/register";
+        }
 
         User user = new User();
 
@@ -33,6 +50,12 @@ public class RegisterController {
 
         userRepository.save(user);
 
-        return "Account created successfully!";
+        session.setAttribute("userEmail", email);
+
+        redirectAttributes.addFlashAttribute(
+                "success",
+                "Account created successfully!");
+
+        return "redirect:/dashboard";
     }
 }

@@ -1,320 +1,367 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"></html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Blanko</title>
+<title>Blanko Dashboard</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-
-/* same styles (unchanged for readability) */
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
+    
+*{margin:0;padding:0;box-sizing:border-box}
 body{
     background:#EBD7CE;
-    color:#3A3335;
     font-family:'Poppins',sans-serif;
+    color:#3A3335;
 }
-
 .header{
     text-align:center;
-    padding:50px 20px;
+    padding:55px 20px 30px;
 }
-
 .header h1{
     font-family:'Cormorant Garamond',serif;
     font-size:72px;
+    color:#482C3D;
     letter-spacing:4px;
-    color:#836871;
 }
-
-.header p{
-    font-size:18px;
-    color:#917F88;
-    margin-top:10px;
+.header p{color:#735453;margin-top:10px}
+.welcome{
+    width:90%;
+    max-width:1200px;
+    margin:20px auto 50px;
+    background:#fff;
+    border-radius:22px;
+    padding:35px;
+    box-shadow:0 10px 25px rgba(72,44,61,.10);
 }
-
-.hero{
-    text-align:center;
-    padding:20px 20px 50px;
-}
-
-.hero h2{
+.welcome h2{
     font-family:'Cormorant Garamond',serif;
     font-size:42px;
-    color:#836871;
-    margin-bottom:15px;
+    color:#482C3D;
+    margin-bottom:10px;
 }
-
-.hero p{
-    max-width:700px;
-    margin:auto;
-    line-height:1.8;
-    color:#5A5054;
+.section-title{
+    text-align:center;
+    font-family:'Cormorant Garamond',serif;
+    font-size:40px;
+    color:#482C3D;
+    margin:50px 0 30px;
 }
-
-.cards{
+.cards,.grid{
     width:90%;
     max-width:1200px;
     margin:auto;
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-    gap:25px;
+    gap:24px;
 }
-
-.card{
-    background:white;
-    padding:30px;
+.card,.box{
+    background:#fff;
     border-radius:22px;
-    box-shadow:0 10px 25px rgba(131,104,113,0.12);
-    transition:0.3s;
+    padding:28px;
+    box-shadow:0 10px 25px rgba(72,44,61,.10);
 }
-
-.card:hover{
-    transform:translateY(-8px);
-}
-
+.card:hover{transform:translateY(-6px);transition:.3s}
 .card h3{
     font-family:'Cormorant Garamond',serif;
+    color:#482C3D;
     font-size:30px;
-    color:#836871;
-    margin-bottom:15px;
+    margin-bottom:12px;
 }
-
-.card p{
-    color:#666;
-    margin-bottom:25px;
-    min-height:50px;
-}
-
-.card button{
+.card p{min-height:70px;line-height:1.6;color:#666}
+button{
     width:100%;
     padding:14px;
     border:none;
     border-radius:12px;
-    background:#836871;
-    color:white;
+    background:#482C3D;
+    color:#fff;
     cursor:pointer;
-    font-size:15px;
-    font-weight:500;
 }
-
-.card button:hover{
-    background:#A37E84;
-}
-
-.features{
-    width:90%;
-    max-width:1200px;
-    margin:80px auto;
-}
-
-.features h2{
-    text-align:center;
+button:hover{background:#8B445C}
+button:disabled{background:#bdaeb3;cursor:not-allowed}
+.box{text-align:center}
+.box h3{
     font-family:'Cormorant Garamond',serif;
     font-size:42px;
-    color:#836871;
-    margin-bottom:35px;
+    color:#482C3D;
 }
-
-.feature-list{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:20px;
-}
-
-.feature{
-    background:white;
-    padding:25px;
-    border-radius:18px;
-    box-shadow:0 8px 20px rgba(131,104,113,0.08);
-}
-
-.feature h3{
-    color:#836871;
-    margin-bottom:10px;
-}
-
 .footer{
     text-align:center;
-    padding:30px;
-    color:#917F88;
+    padding:50px 20px;
+    color:#735453;
+}
+.logout-btn{
+
+position:absolute;
+
+top:30px;
+
+right:40px;
+
+padding:12px 22px;
+
+border:none;
+
+border-radius:25px;
+
+background:#4C3342;
+
+color:white;
+
+cursor:pointer;
+
+font-size:14px;
+
+transition:.3s;
+
+}
+
+.logout-btn:hover{
+
+background:#8B445C;
+
+transform:translateY(-2px);
+
+}
+.toast{
+
+position:fixed;
+
+top:25px;
+
+right:25px;
+
+padding:16px 26px;
+
+border-radius:14px;
+
+color:white;
+
+font-size:15px;
+
+font-weight:500;
+
+z-index:9999;
+
+box-shadow:0 15px 35px rgba(0,0,0,.18);
+
+animation:slideIn .4s ease,
+fadeOut .5s ease 3s forwards;
+
+}
+
+.success{
+
+background:#2E8B57;
+
+}
+
+.error{
+
+background:#C0392B;
+
+}
+
+@keyframes slideIn{
+
+from{
+
+opacity:0;
+
+transform:translateX(120px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateX(0);
+
+}
+
+}
+
+@keyframes fadeOut{
+
+to{
+
+opacity:0;
+
+transform:translateX(120px);
+
+}
+
 }
 
 </style>
 </head>
 
 <body>
+    <div
+    th:if="${success}"
+    id="toast"
+    class="toast success"
+    th:text="${success}">
+</div>
+
+<div
+    th:if="${error}"
+    id="toastError"
+    class="toast error"
+    th:text="${error}">
+</div>
 
 <div class="header">
     <h1>BLANKO</h1>
     <p>Create beautiful documents effortlessly.</p>
 </div>
 
-<div class="hero">
-    <h2>Create Beautiful Documents in Minutes</h2>
-    <p>
-        Blanko helps students, professionals and businesses create polished documents with a single click.
-    </p>
+<div class="welcome">
+    <h2>Welcome Back 👋</h2>
+    <p>Everything you need to create beautiful documents is right here.</p>
 </div>
 
-<!-- CARDS -->
+<h2 class="section-title">Your Modules</h2>
+
 <div class="cards">
 
-    <div class="card">
-        <h3>Resume Builder</h3>
-        <p>Create professional resumes in seconds.</p>
-        <button onclick="window.location.href='/resume'">
-            Open Module
-        </button>
-    </div>
-
-    <div class="card">
-        <h3>Certificate Generator</h3>
-        <p>Create elegant certificates instantly.</p>
-        <button onclick="window.location.href='/certificate'">
-            Open Module
-        </button>
-    </div>
+<div class="card">
+<h3>📄 Resume Builder</h3>
+<p>Create modern ATS-friendly resumes.</p>
+<button onclick="window.location.href='/resume'">Open Module</button>
+</div>
 
 <div class="card">
-    <h3>Bulk Certificates</h3>
-    <p>Generate certificates from CSV files.</p>
-
-    <button onclick="window.location.href='/bulk-certificate'">
-        Open Module
-    </button>
+<h3>🎓 Certificate Generator</h3>
+<p>Create personalized certificates with institute branding.</p>
+<button onclick="window.location.href='/certificate'">Open Module</button>
 </div>
 
-
-    <div class="card">
-        <h3>Invoice Generator</h3>
-        <p>Generate business-ready invoices with automatic totals.</p>
-        <button onclick="window.location.href='/invoice'">
-            Open Module
-        </button>
-    </div>
-
-
-    <div class="card">
-    <h3>My Documents</h3>
-    <p>View all documents you generated.</p>
-    <button onclick="window.location.href='/my-documents'">
-        Open Module
-    </button>
+<div class="card">
+<h3>📦 Bulk Certificates</h3>
+<p>Generate hundreds of certificates from a CSV upload.</p>
+<button onclick="window.location.href='/bulk-certificate'">Open Module</button>
 </div>
 
-    <div class="card">
-        <h3>Study Notes</h3>
-        <p>Organize and generate academic notes.</p>
-        <button disabled>Coming Soon</button>
-    </div>
+<div class="card">
+<h3>🏢 Institute Profile</h3>
+<p>Manage your institute details, logo and signature.</p>
+<button onclick="window.location.href='/institute'">Open Module</button>
+</div>
 
-    <div class="card">
-        <h3>Thesis Formatter</h3>
-        <p>Format dissertations and research reports.</p>
-        <button disabled>Coming Soon</button>
-    </div>
+<div class="card">
+<h3>🧾 Invoice Generator</h3>
+<p>Create clean business invoices instantly.</p>
+<button onclick="window.location.href='/invoice'">Open Module</button>
+</div>
 
-    <div class="card">
-        <h3>Cover Letter Builder</h3>
-        <p>Create professional cover letters.</p>
-        <button disabled>Coming Soon</button>
-    </div>
+<div class="card">
+<h3>📂 My Documents</h3>
+<p>Access and download all your generated PDFs.</p>
+<button onclick="window.location.href='/my-documents'">Open Module</button>
+</div>
 
 </div>
 
-<!-- STATS (READY FOR BACKEND INTEGRATION) -->
-<div class="features">
+<h2 class="section-title">Blanko Today</h2>
 
-    <h2>Blanko Today</h2>
-
-    <div class="feature-list">
-
-        <div class="feature">
-            <h3 id="resumeCount">1</h3>
-            <p>Resumes Generated</p>
-        </div>
-
-        <div class="feature">
-            <h3 id="invoiceCount">0</h3>
-            <p>Invoices Generated</p>
-        </div>
-
-        <div class="feature">
-            <h3 id="certificateCount">0</h3>
-            <p>Certificates Generated</p>
-        </div>
-
-       
-
-    </div>
-
+<div class="grid">
+<div class="box"><h3 id="totalCount">0</h3><p>Total Documents</p></div>
+<div class="box"><h3 id="resumeCount">0</h3><p>Resumes</p></div>
+<div class="box"><h3 id="certificateCount">0</h3><p>Certificates</p></div>
+<div class="box"><h3 id="invoiceCount">0</h3><p>Invoices</p></div>
 </div>
 
-<div class="features">
+<h2 class="section-title">Recent Documents</h2>
 
-    <h2>Why Blanko?</h2>
+<div class="grid">
+<div class="box">
+<p>Recent documents will appear here after backend integration.</p>
+</div>
+</div>
 
-    <div class="feature-list">
+<h2 class="section-title">Coming Soon</h2>
 
-        <div class="feature">
-            <h3>Elegant Templates</h3>
-            <p>Designed for professional presentation.</p>
-        </div>
+<div class="cards">
 
-        <div class="feature">
-            <h3>Instant PDF Export</h3>
-            <p>Create and download documents immediately.</p>
-        </div>
+<div class="card">
+<h3>📚 Study Notes</h3>
+<p>Generate AI-assisted study notes.</p>
+<button disabled>Coming Soon</button>
+</div>
 
-        <div class="feature">
-            <h3>Simple Workflow</h3>
-            <p>Minimal steps. Maximum productivity.</p>
-        </div>
+<div class="card">
+<h3>🎓 Thesis Formatter</h3>
+<p>Format dissertations professionally.</p>
+<button disabled>Coming Soon</button>
+</div>
 
-    </div>
+<div class="card">
+<h3>💼 Cover Letter Builder</h3>
+<p>Create elegant cover letters.</p>
+<button disabled>Coming Soon</button>
+</div>
+<button
+        class="logout-btn"
+        onclick="window.location.href='/logout'">
 
+    Logout
+
+</button>
 </div>
 
 <div class="footer">
-    Blanko © 2026
+<h3 style="font-family:'Cormorant Garamond',serif;color:#482C3D;">Blanko © 2026</h3>
+<p>Crafted for students, educators and professionals.</p>
 </div>
 
-
 <script>
-async function loadCounts() {
-    try {
-        const resumeRes = await fetch("/api/count/resume");
-        const invoiceRes = await fetch("/api/count/invoice");
-        const certificateRes = await fetch("/api/count/certificate");
-
-        const resumeCount = await resumeRes.json();
-        const invoiceCount = await invoiceRes.json();
-        const certificateCount = await certificateRes.json();
-
-        document.getElementById("resumeCount").innerText = resumeCount;
-        document.getElementById("invoiceCount").innerText = invoiceCount;
-        document.getElementById("certificateCount").innerText = certificateCount;
-
-    } catch (err) {
-        console.error("Error loading dashboard stats:", err);
-    }
+async function loadCounts(){
+try{
+const r=await fetch("/api/count/resume");
+const i=await fetch("/api/count/invoice");
+const c=await fetch("/api/count/certificate");
+const rv=await r.json();
+const iv=await i.json();
+const cv=await c.json();
+document.getElementById("resumeCount").innerText=rv;
+document.getElementById("invoiceCount").innerText=iv;
+document.getElementById("certificateCount").innerText=cv;
+document.getElementById("totalCount").innerText=rv+iv+cv;
+}catch(e){
+console.log(e);
 }
-
+}
 loadCounts();
 </script>
+<script>
 
+setTimeout(function(){
+
+const toast=document.getElementById("toast");
+
+if(toast){
+
+toast.remove();
+
+}
+
+const error=document.getElementById("toastError");
+
+if(error){
+
+error.remove();
+
+}
+
+},3500);
+
+</script>
 </body>
 </html>

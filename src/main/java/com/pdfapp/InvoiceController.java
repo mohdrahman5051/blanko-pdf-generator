@@ -2,7 +2,6 @@ package com.pdfapp;
 
 import java.sql.Timestamp;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,80 +15,82 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class InvoiceController {
 
+    private final DocumentRepository documentRepository;
+    private final UserRepository userRepository;
 
-@Autowired
-private DocumentRepository documentRepository;
+    public InvoiceController(
+            DocumentRepository documentRepository,
+            UserRepository userRepository) {
 
-@Autowired
-private UserRepository userRepository;
-
-@GetMapping("/invoice")
-public String invoicePage(HttpSession session) {
-
-    String sessionEmail =
-            (String) session.getAttribute("userEmail");
-
-    if(sessionEmail == null) {
-        return "redirect:/login";
+        this.documentRepository = documentRepository;
+        this.userRepository = userRepository;
     }
 
-    return "invoice";
-}
+    @GetMapping("/invoice")
+    public String invoicePage(HttpSession session) {
 
-@PostMapping("/generate-invoice")
-public ResponseEntity<byte[]> generateInvoice(
-        @RequestParam String customerName,
-        @RequestParam String productName,
-        @RequestParam int quantity,
-        @RequestParam double price,
-        HttpSession session) {
+        String sessionEmail =
+                (String) session.getAttribute("userEmail");
 
-    String sessionEmail =
-            (String) session.getAttribute("userEmail");
+        if (sessionEmail == null) {
+            return "redirect:/login";
+        }
 
-    System.out.println("INVOICE SESSION EMAIL = " + sessionEmail);
-    System.out.println("INVOICE SESSION ID = " + session.getId());
-
-    if (sessionEmail == null) {
-        return ResponseEntity.status(401).build();
+        return "invoice";
     }
 
-    User user =
-            userRepository.findByEmail(sessionEmail);
+    @PostMapping("/generate-invoice")
+    public ResponseEntity<byte[]> generateInvoice(
+            @RequestParam String customerName,
+            @RequestParam String productName,
+            @RequestParam int quantity,
+            @RequestParam double price,
+            HttpSession session) {
 
-    if (user == null) {
-        return ResponseEntity.status(404).build();
+        String sessionEmail =
+                (String) session.getAttribute("userEmail");
+
+        System.out.println("INVOICE SESSION EMAIL = " + sessionEmail);
+        System.out.println("INVOICE SESSION ID = " + session.getId());
+
+        if (sessionEmail == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        User user =
+                userRepository.findByEmail(sessionEmail);
+
+        if (user == null) {
+            return ResponseEntity.status(404).build();
+        }
+
+        byte[] pdfBytes =
+                InvoicePdfGenerator.generateInvoice(
+                        customerName,
+                        productName,
+                        quantity,
+                        price);
+
+        Document document = new Document();
+
+        document.setUserId(user.getId());
+        document.setDocumentType("Invoice");
+        document.setFileName("invoice.pdf");
+        document.setCreatedAt(
+                new Timestamp(
+                        System.currentTimeMillis()));
+
+        System.out.println("INVOICE SAVE EXECUTED");
+
+        documentRepository.save(document);
+
+        System.out.println("INVOICE SAVED SUCCESSFULLY");
+
+        return ResponseEntity.ok()
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=invoice.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdfBytes);
     }
-
-    byte[] pdfBytes =
-            InvoicePdfGenerator.generateInvoice(
-                    customerName,
-                    productName,
-                    quantity,
-                    price);
-
-    Document document = new Document();
-
-    document.setUserId(user.getId());
-    document.setDocumentType("Invoice");
-    document.setFileName("invoice.pdf");
-    document.setCreatedAt(
-            new Timestamp(
-                    System.currentTimeMillis()));
-
-    System.out.println("INVOICE SAVE EXECUTED");
-
-    documentRepository.save(document);
-
-    System.out.println("INVOICE SAVED SUCCESSFULLY");
-
-    return ResponseEntity.ok()
-            .header(
-                    HttpHeaders.CONTENT_DISPOSITION,
-                    "attachment; filename=invoice.pdf")
-            .contentType(MediaType.APPLICATION_PDF)
-            .body(pdfBytes);
-}
-
-
 }

@@ -1,5 +1,6 @@
 package com.pdfapp;
-
+import com.lowagie.text.pdf.ColumnText;
+import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.Document;
@@ -8,6 +9,8 @@ import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.awt.Color;
 import java.io.File;
+
+
 
 public class CertificatePdfGenerator {
 
@@ -22,10 +25,12 @@ public static byte[] generateCertificate(
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         Document document = new Document(PageSize.A4.rotate());
-        PdfWriter.getInstance(document, outputStream);
+        PdfWriter writer = PdfWriter.getInstance(document, outputStream);
 
         document.open();
+        
 
+PdfContentByte canvas = writer.getDirectContent();
         if(institute.getLogoPath() != null) {
 
     String logoFullPath =
@@ -50,13 +55,7 @@ public static byte[] generateCertificate(
     }
 }
 
-        // ---------------- TITLE ----------------
-        Font titleFont = new Font(
-        Font.TIMES_ROMAN,
-        32,
-        Font.BOLD,
-        new Color(139,69,19));
-        Font subFont = new Font(Font.HELVETICA, 14, Font.ITALIC);
+        
         Font nameFont = new Font(
         Font.TIMES_ROMAN,
         30,
@@ -79,21 +78,10 @@ Paragraph instituteName =
 instituteName.setAlignment(
         Element.ALIGN_CENTER);
 
-        Paragraph line1 = new Paragraph("__________________________________________", normalFont);
-        line1.setAlignment(Element.ALIGN_CENTER);
-
-        Paragraph certificateTitle = new Paragraph("CERTIFICATE OF COMPLETION", titleFont);
-        certificateTitle.setAlignment(Element.ALIGN_CENTER);
-
-        Paragraph subtitle = new Paragraph("This is proudly presented to", subFont);
-        subtitle.setAlignment(Element.ALIGN_CENTER);
+        
 
         Paragraph name = new Paragraph(studentName.toUpperCase(), nameFont);
         name.setAlignment(Element.ALIGN_CENTER);
-
-        Paragraph text1 = new Paragraph(
-                "for successfully completing the course", normalFont);
-        text1.setAlignment(Element.ALIGN_CENTER);
 
         Paragraph course = new Paragraph(courseName, new Font(Font.HELVETICA, 18, Font.BOLD));
         course.setAlignment(Element.ALIGN_CENTER);
@@ -145,25 +133,16 @@ Paragraph directorName =
 
 directorName.setAlignment(Element.ALIGN_CENTER);
 
-Paragraph directorTitle =
-        new Paragraph(
-                "Director",
-                smallFont);
 
-directorTitle.setAlignment(Element.ALIGN_CENTER);
+
+
         // ---------------- SPACING ----------------
         document.add(instituteName);
         document.add(new Paragraph(" "));
-        document.add(line1);
+       
+       
         document.add(new Paragraph(" "));
-        document.add(certificateTitle);
-        document.add(new Paragraph(" "));
-        document.add(subtitle);
-        document.add(new Paragraph(" "));
-        document.add(name);
-        document.add(new Paragraph(" "));
-        document.add(text1);
-        document.add(new Paragraph(" "));
+        
         document.add(course);
         document.add(new Paragraph(" "));
         document.add(date);
@@ -175,11 +154,28 @@ directorTitle.setAlignment(Element.ALIGN_CENTER);
                 document.add(signature);
         }
         document.add(directorName);
-        document.add(directorTitle);
+        
         document.add(new Paragraph(" "));
         
-
+        ColumnText.showTextAligned(
+        canvas,
+        Element.ALIGN_CENTER,
+        new Phrase(
+                studentName.toUpperCase(),
+                nameFont),
+        420,
+        330,
+        0);
         document.close();
+        ColumnText.showTextAligned(
+        canvas,
+        Element.ALIGN_CENTER,
+        new Phrase(
+                studentName.toUpperCase(),
+                nameFont),
+        420,
+        330,
+        0);
 
         return outputStream.toByteArray();
 

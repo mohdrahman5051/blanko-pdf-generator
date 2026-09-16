@@ -2,7 +2,6 @@ package com.pdfapp;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,11 +11,16 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class MyDocumentsController {
 
-    @Autowired
-    private DocumentRepository documentRepository;
+    private final DocumentRepository documentRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    public MyDocumentsController(
+            DocumentRepository documentRepository,
+            UserRepository userRepository) {
+
+        this.documentRepository = documentRepository;
+        this.userRepository = userRepository;
+    }
 
     @GetMapping("/my-documents")
     public String myDocuments(

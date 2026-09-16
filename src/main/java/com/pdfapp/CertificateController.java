@@ -2,7 +2,6 @@ package com.pdfapp;
 
 import java.sql.Timestamp;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,84 +15,100 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class CertificateController {
 
+    private final DocumentRepository documentRepository;
+    private final UserRepository userRepository;
+    private final InstituteRepository instituteRepository;
 
-@Autowired
-private DocumentRepository documentRepository;
+    public CertificateController(
+            DocumentRepository documentRepository,
+            UserRepository userRepository,
+            InstituteRepository instituteRepository) {
 
-@Autowired
-private UserRepository userRepository;
-
-@Autowired
-private InstituteRepository instituteRepository;
-
-@GetMapping("/certificate")
-public String certificatePage(HttpSession session) {
-
-    String sessionEmail =
-            (String) session.getAttribute("userEmail");
-
-    if(sessionEmail == null) {
-        return "redirect:/login";
+        this.documentRepository = documentRepository;
+        this.userRepository = userRepository;
+        this.instituteRepository = instituteRepository;
     }
 
-    return "certificate";
-}
+    @GetMapping("/certificate")
+    public String certificatePage(HttpSession session) {
 
-@PostMapping("/generate-certificate")
-public ResponseEntity<byte[]> generateCertificate(
-        @RequestParam String studentName,
-        @RequestParam String courseName,
-        HttpSession session) {
+        String sessionEmail =
+                (String) session.getAttribute("userEmail");
 
-    String sessionEmail =
-            (String) session.getAttribute("userEmail");
+        if (sessionEmail == null) {
+            return "redirect:/login";
+        }
 
-System.out.println("CERTIFICATE SESSION EMAIL = " + sessionEmail);
-System.out.println("CERTIFICATE SESSION ID = " + session.getId());
+        User user =
+                userRepository.findByEmail(sessionEmail);
 
+        Institute institute =
+                instituteRepository.findByUserId(user.getId());
 
-    if (sessionEmail == null) {
-        return ResponseEntity.status(401).build();
+        if (institute == null) {
+            return "redirect:/institute";
+        }
+
+        return "certificate";
     }
 
-    User user =
-            userRepository.findByEmail(sessionEmail);
+    @PostMapping("/generate-certificate")
+    public ResponseEntity<byte[]> generateCertificate(
+            @RequestParam String studentName,
+            @RequestParam String courseName,
+            HttpSession session) {
 
-    if (user == null) {
-        return ResponseEntity.status(404).build();
+        String sessionEmail =
+                (String) session.getAttribute("userEmail");
+
+        System.out.println(
+                "CERTIFICATE SESSION EMAIL = " + sessionEmail);
+
+        System.out.println(
+                "CERTIFICATE SESSION ID = " + session.getId());
+
+        if (sessionEmail == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        User user =
+                userRepository.findByEmail(sessionEmail);
+
+        if (user == null) {
+            return ResponseEntity.status(404).build();
+        }
+
+        Institute institute =
+                instituteRepository.findByUserId(user.getId());
+
+        byte[] pdfBytes =
+                CertificatePdfGenerator.generateCertificate(
+                        studentName,
+                        courseName,
+                        institute);
+
+        Document document = new Document();
+
+        document.setUserId(user.getId());
+        document.setDocumentType("Certificate");
+        document.setFileName("certificate.pdf");
+        document.setCreatedAt(
+                new Timestamp(
+                        System.currentTimeMillis()));
+
+        System.out.println(
+                "SAVING CERTIFICATE DOCUMENT");
+
+        documentRepository.save(document);
+
+        System.out.println(
+                "CERTIFICATE DOCUMENT SAVED");
+
+        return ResponseEntity.ok()
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=certificate.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdfBytes);
     }
-
-    Institute institute =
-        instituteRepository.findByUserId(user.getId());
-
-byte[] pdfBytes =
-        CertificatePdfGenerator.generateCertificate(
-                studentName,
-                courseName,
-                institute);
-
-    Document document = new Document();
-
-    document.setUserId(user.getId());
-    document.setDocumentType("Certificate");
-    document.setFileName("certificate.pdf");
-    document.setCreatedAt(
-            new Timestamp(
-                    System.currentTimeMillis()));
-
-
-     System.out.println("SAVING CERTIFICATE DOCUMENT");               
-    documentRepository.save(document);
-     System.out.println("CERTIFICATE DOCUMENT SAVED");
-
-
-    return ResponseEntity.ok()
-            .header(
-                    HttpHeaders.CONTENT_DISPOSITION,
-                    "attachment; filename=certificate.pdf")
-            .contentType(MediaType.APPLICATION_PDF)
-            .body(pdfBytes);
-}
-
-
 }

@@ -1,30 +1,218 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Login - Blanko</title>
-</head>
-<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blanko Login</title>
 
-<h1>Login</h1>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+font-family:Poppins,sans-serif;
+background:linear-gradient(135deg,#8B445C,#A38893,#EBD7CE);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+.login-card{
+width:900px;
+height:560px;
+display:grid;
+grid-template-columns:1fr 1fr;
+background:rgba(255,255,255,.15);
+backdrop-filter:blur(20px);
+border-radius:35px;
+overflow:hidden;
+box-shadow:0 20px 50px rgba(0,0,0,.18);
+}
+.left{
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+padding:40px;
+color:white;
+}
+.avatar{
+width:120px;height:120px;border-radius:50%;
+background:white;
+display:flex;align-items:center;justify-content:center;
+font-size:60px;margin-bottom:25px;
+}
+.left h1{
+font-family:"Cormorant Garamond",serif;
+font-size:58px;
+letter-spacing:3px;
+}
+.left p{margin-top:15px;text-align:center;line-height:1.8}
+.right{
+background:white;
+padding:60px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+}
+.right h2{
+font-family:"Cormorant Garamond",serif;
+font-size:44px;
+color:#482C3D;
+margin-bottom:30px;
+}
+input{
+width:100%;
+padding:16px 18px;
+border-radius:30px;
+border:2px solid #ddd;
+margin-bottom:20px;
+font-size:15px;
+outline:none;
+}
+input:focus{
+border-color:#8B445C;
+}
+button{
+padding:16px;
+border:none;
+border-radius:30px;
+background:#482C3D;
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:.3s;
+}
+button:hover{
+background:#8B445C;
+}
+.links{
+margin-top:25px;
+display:flex;
+justify-content:space-between;
+font-size:14px;
+}
+a{
+text-decoration:none;
+color:#8B445C;
+font-weight:600;
+}
+@media(max-width:900px){
+.login-card{
+width:95%;
+height:auto;
+grid-template-columns:1fr;
+}
+.left{padding:30px}
+.right{padding:35px}
+}
+
+/* ---------- Toast ---------- */
+
+.toast{
+    position:fixed;
+    top:30px;
+    right:30px;
+    padding:15px 22px;
+    border-radius:12px;
+    color:white;
+    font-size:15px;
+    font-weight:500;
+    z-index:9999;
+    animation:slideIn .4s ease,fadeOut .5s ease 3s forwards;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
+
+.success{
+    background:#2E8B57;
+}
+
+.error{
+    background:#C0392B;
+}
+
+@keyframes slideIn{
+
+    from{
+        opacity:0;
+        transform:translateX(120px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateX(0);
+    }
+
+}
+
+@keyframes fadeOut{
+
+    to{
+        opacity:0;
+        transform:translateX(120px);
+    }
+
+}
+</style>
+</head>
+
+<body>
+    <div th:if="${success}" class="toast success">
+    <span th:text="${success}"></span>
+</div>
+
+<div th:if="${error}" class="toast error">
+    <span th:text="${error}"></span>
+</div>
+
+<div class="login-card">
+
+<div class="left">
+<div class="avatar">👤</div>
+<h1>BLANKO</h1>
+<p>Create beautiful documents effortlessly.</p>
+</div>
+
+<div class="right">
+
+<h2>Sign In</h2>
 
 <form action="/login" method="post">
 
+<input type="email" name="email" placeholder="Email Address" required>
 
-<p>Email</p>
-<input type="email" name="email" required>
+<input type="password" name="password" placeholder="Password" required>
 
-<p>Password</p>
-<input type="password" name="password" required>
-
-<br><br>
-
-<button type="submit">
-    Login
-</button>
-
+<button type="submit">Login</button>
 
 </form>
 
+<div class="links">
+<a href="/register">Create Account</a>
+<a href="#">Forgot Password?</a>
+</div>
+
+</div>
+
+</div>
+<script>
+
+setTimeout(function(){
+
+    const toast =
+    document.querySelector(".toast");
+
+    if(toast){
+
+        toast.remove();
+
+    }
+
+},3500);
+
+</script>
 </body>
 </html>

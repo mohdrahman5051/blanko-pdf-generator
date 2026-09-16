@@ -2,7 +2,6 @@ package com.pdfapp;
 
 import com.opencsv.CSVReader;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +18,37 @@ import java.util.zip.ZipOutputStream;
 @Controller
 public class BulkCertificateController {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final InstituteRepository instituteRepository;
 
-    @Autowired
-    private InstituteRepository instituteRepository;
+    public BulkCertificateController(
+            UserRepository userRepository,
+            InstituteRepository instituteRepository) {
+
+        this.userRepository = userRepository;
+        this.instituteRepository = instituteRepository;
+    }
 
     @GetMapping("/bulk-certificate")
-    public String bulkCertificatePage() {
+    public String bulkCertificatePage(HttpSession session) {
+
+        String sessionEmail =
+                (String) session.getAttribute("userEmail");
+
+        if (sessionEmail == null) {
+            return "redirect:/login";
+        }
+
+        User user =
+                userRepository.findByEmail(sessionEmail);
+
+        Institute institute =
+                instituteRepository.findByUserId(user.getId());
+
+        if (institute == null) {
+            return "redirect:/institute";
+        }
+
         return "bulk-certificate";
     }
 
